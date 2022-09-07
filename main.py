@@ -1,20 +1,17 @@
 import logging
-import visa_instr
 import ui
 
-
-config = {
-    "address": 'TCPIP0::192.168.110.128::inst0::INSTR',
-    "timeout": 10000,
-    "termination": "\n",
-    "level": visa_instr.VisaInstrument.LEVEL_OPC_ERR
-}
+from old_visa_device import VisaDevice
+from instrument_utils.device_config import DeviceConfig
 
 
-logging.basicConfig(format='[%(asctime)s] %(message)s')
+device_config = DeviceConfig()
+device = device_config.create_device('n5245b')
 
-instr = visa_instr.VisaInstrument(**config)
-instr.get_info()
+visa_device = VisaDevice(**device.config)
+print(visa_device.get_info())
 
-ui.main()
+
+
+
 

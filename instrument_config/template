@@ -1,0 +1,7 @@
+# log_level should be:
+# 1) none
+# 2) err
+# 3) opc
+# 4) opc_and_err
+
+# Config should have command dictionary for specified device

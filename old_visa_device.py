@@ -2,7 +2,7 @@ import pyvisa
 import logging
 
 
-class VisaInstrument:
+class VisaDevice:
     LEVEL_NONE = 0
     LEVEL_ERR = 1
     LEVEL_OPC = 2
