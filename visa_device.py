@@ -46,7 +46,11 @@ class VisaDevice(Device):
                 for arg_name in arg_list:
                     if arg := kwargs.get(arg_name):
                         args.append(arg)
-                tmp = self.send(cmd % tuple(args))
+
+                if "{0}" in cmd:
+                    tmp = self.send(cmd.format(*args))
+                else:
+                    tmp = self.send(cmd % tuple(args))
             else:
                 tmp = self.send(cmd)
 

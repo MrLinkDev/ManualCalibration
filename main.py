@@ -9,12 +9,9 @@ procedure_reset = {
     "procedure_name": "reset"
 }
 
-procedure_cfg_meas = {
-    "procedure_name": "create_meas",
-    "name_portA": 2,
-    "name_portB": 2,
-    "portA": 2,
-    "portB": 2
+procedure_cfg_meas_refl = {
+    "procedure_name": "create_meas_reflection",
+    "port": 1
 }
 
 procedure_set_width = {
@@ -32,7 +29,7 @@ visa_device = DeviceConfig().create_device('n5245b')
 print(visa_device.exec_procedure(**procedure_info))
 
 visa_device.exec_procedure(**procedure_reset)
-visa_device.exec_procedure(**procedure_cfg_meas)
+visa_device.exec_procedure(**procedure_cfg_meas_refl)
 visa_device.exec_procedure(**procedure_set_width)
 
 data = visa_device.exec_procedure(**procedure_meas)
