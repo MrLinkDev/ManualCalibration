@@ -1,6 +1,7 @@
 import pyvisa
 import logging
 
+from time import sleep
 from instrument_utils.device import Device
 
 
@@ -58,19 +59,16 @@ class VisaDevice(Device):
             return out
 
     def send(self, cmd):
+        self.wait()
         if "?" in cmd:
             out = self.instrument.query(cmd)
+            self.instrument.write("*OPC")
 
             self.check_error()
             return out
         else:
-            if self.level >= self.LEVEL_OPC:
-                self.instrument.write("*OPC")
-
             self.instrument.write(cmd)
-
-            if self.level >= self.LEVEL_OPC:
-                self.instrument.write("*OPC?")
+            self.instrument.write("*OPC")
 
             if self.level == self.LEVEL_ERR or self.level == self.LEVEL_OPC_ERR:
                 self.check_error()
@@ -82,4 +80,10 @@ class VisaDevice(Device):
             logging.error(err)
         else:
             logging.debug(err)
+
+    def wait(self):
+        opc = self.instrument.query("*OPC?")
+        while opc != "+1":
+            sleep(0.01)
+            opc = self.instrument.query("*OPC?")
 
