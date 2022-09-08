@@ -1,7 +1,7 @@
 import os
 import json
 
-from instrument_utils.device import Device
+from visa_device import VisaDevice
 
 
 class DeviceConfig:
@@ -21,7 +21,7 @@ class DeviceConfig:
     def create_device(self, device_name):
         config = self.__load_config__(self.device_list.get(device_name))
 
-        device = Device(**config)
+        device = VisaDevice(**config)
         return device
 
     def __load_config__(self, config_path):
@@ -30,7 +30,7 @@ class DeviceConfig:
         config = {}
         config.update(data.get("info"))
         config.update(data.get("config"))
-        config.update(data.get("cmd"))
+        config["procedure"] = data.get("procedure")
 
         return config
 

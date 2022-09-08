@@ -7,8 +7,7 @@ class Device:
     port_num = None
 
     config = {}
-
-    cmd_init = []
+    procedure_list = {}
 
     # TODO: add lists for commands
     def __init__(self, **kwargs):
@@ -28,8 +27,7 @@ class Device:
         if log_level := kwargs.get("log_level"):
             self.config["log_level"] = log_level
 
-        if init := kwargs.get("init"):
-            self.cmd_init = init
-            print(init)
+        if procedure := kwargs.get("procedure"):
+            self.procedure_list = procedure
 
 
