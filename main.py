@@ -1,5 +1,5 @@
 from instrument_utils.device_config import DeviceConfig
-from calibration_file import Reflection
+from calibration_file import Reflection, Transition
 
 procedure_info = {
     "procedure_name": "get_info"
@@ -12,6 +12,12 @@ procedure_reset = {
 procedure_cfg_meas_refl = {
     "procedure_name": "create_meas_reflection",
     "port": 1
+}
+
+procedure_cfg_meas_trans = {
+    "procedure_name": "create_meas_transition",
+    "port_a": 1,
+    "port_b": 2
 }
 
 procedure_set_width = {
@@ -29,7 +35,7 @@ visa_device = DeviceConfig().create_device('n5245b')
 print(visa_device.exec_procedure(**procedure_info))
 
 visa_device.exec_procedure(**procedure_reset)
-visa_device.exec_procedure(**procedure_cfg_meas_refl)
+visa_device.exec_procedure(**procedure_cfg_meas_trans)
 visa_device.exec_procedure(**procedure_set_width)
 
 data = visa_device.exec_procedure(**procedure_meas)
@@ -46,7 +52,7 @@ for i in range(100):
     content_list.append(content)
 
 file_data = {
-    "title": 2,
+    "title": 1,
     "content": content_list
 }
 
