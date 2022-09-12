@@ -67,7 +67,27 @@
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'a{1}/a{0}', 'R{1}/R{0}'",
+                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'a{1}/a{0}', 'a{1}/a{0},{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{1}', 'S{0}{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'a{0}/a{1}', 'a{0}/a{1},{1}'",
                 "args": [
                     "port_a",
                     "port_b"
@@ -87,7 +107,27 @@
                 ]
             },
             {
-                "cmd": "DISPLAY:WINDOW1:TRACE2:FEED 'a{1}/a{0}'",
+                "cmd": "DISPLAY:WINDOW1:TRACE3:FEED 'a{1}/a{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE4:FEED 'S{0}{0}'",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE5:FEED 'S{0}{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE6:FEED 'a{0}/a{1}'",
                 "args": [
                     "port_a",
                     "port_b"
@@ -117,12 +157,80 @@
                 ]
             }
         ],
-        "get_meas": [
+        "get_refl_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:STEP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
             {
                 "cmd": "INITIATE:CONTINUOUS OFF"
             },
             {
                 "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            }
+        ],
+        "get_trans_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:STEP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
+            {
+                "cmd": "INITIATE:CONTINUOUS OFF"
+            },
+            {
+                "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE1:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE2:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE3:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE4:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE5:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE6:SELECT"
             },
             {
                 "cmd": "CALCULATE:DATA? SDATA"

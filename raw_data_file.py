@@ -22,7 +22,7 @@ from os.path import exists
 from os import remove
 
 
-class CalibrationFile:
+class RawDataFile:
     DEFAULT_FILEPATH = "calibration/temp"
     file = None
 
@@ -42,8 +42,13 @@ class CalibrationFile:
             self.file.write(self.row_mask % tuple(d))
             self.file.write("\n")
 
+    def close(self):
+        self.file.close()
 
-class Reflection(CalibrationFile):
+    def parse_data_to_file(self, data, **kwargs): ...
+
+
+class Reflection(RawDataFile):
     title_mask = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)"
     row_mask = "%s\t%s\t%s"
 
@@ -58,8 +63,33 @@ class Reflection(CalibrationFile):
     #   ]
     # }
 
+    def parse_data_to_file(self, data, **kwargs):
+        freq_start = float(data[0])
+        freq_stop = float(data[1])
+        freq_step = float(data[2])
+        points = int(data[3])
 
-class Transition(CalibrationFile):
+        data = data.pop(-1)
+        data = data.split(',')
+
+        re = data[0::2]
+        im = data[1::2]
+
+        content_list = []
+
+        for i in range(points):
+            content = [freq_start + i * freq_step, re[i], im[i]]
+            content_list.append(content)
+
+        file_data = {
+            "title": kwargs.get("port"),
+            "content": content_list
+        }
+
+        self.write(file_data)
+
+
+class Transition(RawDataFile):
     title_mask = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)\tS{1}{0}(REAL)\tS{1}{0}(IMAG)\ta{1}/a{0}(REAL)\ta{1}/a{0}(IMAG)\tS{1}{1}(REAL)\tS{1}{1}(IMAG)\tS{0}{1}(REAL)\tS{0}{1}(IMAG)\ta{0}/a{1}(REAL)\ta{0}/a{1}(IMAG)"
     row_mask = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
 
@@ -76,4 +106,45 @@ class Transition(CalibrationFile):
     #       line_n
     #   ]
     # }
+
+    def parse_data_to_file(self, data, **kwargs):
+        freq_start = float(data[0])
+        freq_stop = float(data[1])
+        freq_step = float(data[2])
+        points = int(data[3])
+
+        data = data[-6:]
+
+        re = []
+        im = []
+
+        for i in range(len(data)):
+            data[i] = data[i].split(',')
+
+            re.append(data[i][0::2])
+            im.append(data[i][1::2])
+
+        content_list = []
+
+        for i in range(points):
+            content = [freq_start + i * freq_step,
+                       re[0][i], im[0][i],
+                       re[1][i], im[1][i],
+                       re[2][i], im[2][i],
+                       re[3][i], im[3][i],
+                       re[4][i], im[4][i],
+                       re[5][i], im[5][i],
+                       ]
+            print(content)
+            content_list.append(content)
+
+        file_data = {
+            "title": [
+                kwargs.get("port_a"),
+                kwargs.get("port_b")
+            ],
+            "content": content_list
+        }
+
+        self.write(file_data)
 

@@ -1,5 +1,5 @@
-from instrument_utils.device_config import DeviceConfig
-from calibration_file import Reflection, Transition
+from instrument_utils.device_model import DeviceModel
+from raw_data_file import Reflection, Transition
 
 procedure_info = {
     "procedure_name": "get_info"
@@ -27,37 +27,39 @@ procedure_set_width = {
     "points": 100
 }
 
-procedure_meas = {
-    "procedure_name": "get_meas"
+procedure_refl_meas = {
+    "procedure_name": "get_refl_meas"
 }
 
-visa_device = DeviceConfig().create_device('n5245b')
+procedure_trans_meas = {
+    "procedure_name": "get_trans_meas"
+}
+
+visa_device = DeviceModel().create_device('n5245b')
 print(visa_device.exec_procedure(**procedure_info))
+
+visa_device.exec_procedure(**procedure_reset)
+visa_device.exec_procedure(**procedure_cfg_meas_refl)
+visa_device.exec_procedure(**procedure_set_width)
+
+data = visa_device.exec_procedure(**procedure_refl_meas)
+
+reflection_file = Reflection()
+reflection_file.parse_data_to_file(data, port=1)
+reflection_file.close()
+
 
 visa_device.exec_procedure(**procedure_reset)
 visa_device.exec_procedure(**procedure_cfg_meas_trans)
 visa_device.exec_procedure(**procedure_set_width)
 
-data = visa_device.exec_procedure(**procedure_meas)
-data = data.split(',')
+data = visa_device.exec_procedure(**procedure_trans_meas)
 
-re = data[0::2]
-im = data[1::2]
+transition_file = Transition()
+transition_file.parse_data_to_file(data, port_a=1, port_b=2)
 
-content_list = []
-df = (5e9 - 1e9) / (100 - 1)
 
-for i in range(100):
-    content = [1e9 + i * df, re[i], im[i]]
-    content_list.append(content)
 
-file_data = {
-    "title": 1,
-    "content": content_list
-}
-
-reflection_file = Reflection()
-reflection_file.write(file_data)
 
 
 
