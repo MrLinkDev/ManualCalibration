@@ -23,20 +23,19 @@ from os import remove
 
 
 class RawDataFile:
-    DEFAULT_FILEPATH = "calibration/temp"
+    DEFAULT_FILEPATH = "../calibration/"
+    DEFAULT_FILE_EXTENSION = ".csv"
+
     file = None
 
     title_mask = None
     row_mask = None
 
     def __init__(self, path=DEFAULT_FILEPATH):
-        if exists(path):
-            remove(path)
-
-        self.file = open(path, 'w')
+        self.file = open(path + self.DEFAULT_FILE_EXTENSION, 'w')
 
     def write(self, data):
-        self.file.write(self.title_mask.format(data.get("title")))
+        self.file.write(self.title_mask.format(*data.get("title")))
         self.file.write("\n")
         for d in data.get("content"):
             self.file.write(self.row_mask % tuple(d))
@@ -82,7 +81,7 @@ class Reflection(RawDataFile):
             content_list.append(content)
 
         file_data = {
-            "title": kwargs.get("port"),
+            "title": str(kwargs.get("port")),
             "content": content_list
         }
 
@@ -133,15 +132,13 @@ class Transition(RawDataFile):
                        re[2][i], im[2][i],
                        re[3][i], im[3][i],
                        re[4][i], im[4][i],
-                       re[5][i], im[5][i],
-                       ]
-            print(content)
+                       re[5][i], im[5][i]]
             content_list.append(content)
 
         file_data = {
             "title": [
-                kwargs.get("port_a"),
-                kwargs.get("port_b")
+                str(kwargs.get("port_a")),
+                str(kwargs.get("port_b"))
             ],
             "content": content_list
         }

@@ -1,7 +1,7 @@
 import os
 import json
 
-from visa_device import VisaDevice
+from instrument_utils.visa_device import VisaDevice
 
 
 class DeviceModel:
