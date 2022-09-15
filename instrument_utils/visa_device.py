@@ -91,3 +91,6 @@ class VisaDevice(Device):
             sleep(0.01)
             opc = self.instrument.query("*OPC?")
 
+    def disconnect(self):
+        self.instrument.close()
+

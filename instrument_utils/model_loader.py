@@ -4,7 +4,7 @@ import json
 from instrument_utils.visa_device import VisaDevice
 
 
-class DeviceModel:
+class ModelLoader:
     DEFAULT_DIR = "instrument_model/"
     FILE_EXTENSION = ".model"
 
@@ -18,21 +18,30 @@ class DeviceModel:
             else:
                 self.device_list[file.strip(self.FILE_EXTENSION)] = directory + file
 
-    def create_device(self, device_name):
-        model = self.__load_model__(self.device_list.get(device_name))
-
+    def create_device(self, model):
         device = VisaDevice(**model)
         return device
 
-    def __load_model__(self, model_path):
+    def load_model(self, device_name=None, path=None):
+        if device_name is not None:
+            model_path = self.device_list.get(device_name)
+        if path is not None:
+            model_path = path
+
         data = json.load(open(model_path))
 
         model = {}
-        model.update(data.get("info"))
-        model.update(data.get("config"))
-        model["procedure"] = data.get("procedure")
+        if info := data.get("info"):
+            model.update(info)
+        if config := data.get("config"):
+            model.update(config)
+        if procedure := data.get("procedure"):
+            model["procedure"] = procedure
 
         return model
+
+    def get_device_list(self):
+        return self.device_list.keys()
 
 
 
