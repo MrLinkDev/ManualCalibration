@@ -19,8 +19,7 @@ class ModelLoader:
                 self.device_list[file.strip(self.FILE_EXTENSION)] = directory + file
 
     def create_device(self, model):
-        device = VisaDevice(**model)
-        return device
+        return VisaDevice(**model)
 
     def load_model(self, device_name=None, path=None):
         if device_name is not None:
@@ -35,8 +34,10 @@ class ModelLoader:
             model.update(info)
         if config := data.get("config"):
             model.update(config)
-        if procedure := data.get("procedure"):
-            model["procedure"] = procedure
+        if params := data.get("params"):
+            model["params"] = params
+        if procedure := data.get("procedure_dict"):
+            model["procedure_dict"] = procedure
 
         return model
 

@@ -18,10 +18,6 @@
 # FREQ(HZ)\tS%d%d(REAL)\tS%d%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tA%d/A%d(REAL)\tA%d/A%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tA%d/A%d(REAL)\tA%d/A%d(IMAG)
 
 
-from os.path import exists
-from os import remove
-
-
 class RawDataFile:
     DEFAULT_FILEPATH = "../calibration/"
     DEFAULT_FILE_EXTENSION = ".csv"

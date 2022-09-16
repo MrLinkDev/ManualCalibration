@@ -9,8 +9,8 @@ class Device:
     config = {}
     procedure_list = {}
 
-    # TODO: add lists for commands
     def __init__(self, **kwargs):
+        print(kwargs)
         if vendor := kwargs.get("vendor"):
             self.vendor = vendor
         if model := kwargs.get("model"):
@@ -27,7 +27,7 @@ class Device:
         if log_level := kwargs.get("log_level"):
             self.config["log_level"] = log_level
 
-        if procedure := kwargs.get("procedure"):
+        if procedure := kwargs.get("procedure_dict"):
             self.procedure_list = procedure
 
 
