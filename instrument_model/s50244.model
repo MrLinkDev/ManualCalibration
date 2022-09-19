@@ -3,5 +3,228 @@
         "vendor": "planar",
         "model": "S50224",
         "port_num": 2
+    },
+
+    "config": {
+        "address": "TCPIP0::192.168.110.128::inst0::INSTR",
+        "timeout": 10000,
+        "termination": "\n",
+        "log_level": "opc_and_err"
+    },
+
+    "params": {
+        "start_freq": 1e9,
+        "stop_freq": 3e9,
+        "points": 501,
+        "rbw": 1e3,
+        "power": -25
+    },
+
+    "procedure_dict": {
+        "get_info": [
+            {
+                "cmd": "*IDN?"
+            }
+        ],
+
+        "reset": [
+            {
+                "cmd": "*RST"
+            },
+            {
+                "cmd": "*CLS"
+            }
+        ],
+
+        "device_config": [
+            {
+                "cmd": ":FORMat:DATA ASCII"
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE:BANDWIDTH:RESOLUTION %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE OFF"
+            },
+            {
+                "cmd": "SOURCE:POWER:PORT:LEVEL:IMMEDIATE:AMPLITUDE %d",
+                "args": [
+                    "power"
+                ]
+            }
+        ],
+
+        "create_meas_reflection" : [
+            {
+                "cmd": "SYSTEM:PRESET"
+            },
+            {
+                "cmd": "DISPLAY:SPLIT 1"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:COUNT 1"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "args": [
+                    "port"
+                ]
+            }
+        ],
+
+        "create_meas_thru" : [
+            {
+                "cmd": "SYSTEM:PRESET"
+            },
+            {
+                "cmd": "DISPLAY:SPLIT 1"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:COUNT 6"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "args": [
+                    "port_a"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{1}{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'R{0}'",
+                "args": [
+                    "port_a"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER1:DEFINE 'R{0}'",
+                "args": [
+                    "port_b"
+                ]
+            }
+        ],
+
+        "get_refl_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:STEP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
+            {
+                "cmd": "INITIATE:CONTINUOUS OFF"
+            },
+            {
+                "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            }
+        ],
+
+        "get_thru_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:STEP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
+            {
+                "cmd": "INITIATE:CONTINUOUS OFF"
+            },
+            {
+                "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE1:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE2:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE3:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE4:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE5:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW:TRACE6:SELECT"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            }
+        ]
     }
 }

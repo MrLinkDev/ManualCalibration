@@ -1,13 +1,19 @@
+import asyncio
+import os.path
+import time
 import tkinter as tk
 
 from tkinter import ttk
 from tkinter import filedialog as fd
 from instrument_utils.model_loader import ModelLoader, VisaDevice
-from utils.raw_data_file import Reflection, Transition
+from utils.raw_data_file import Reflection, Thru
 from utils.procedure_dict import *
 
 
 class App:
+    STATUS_OK = 0
+    STATUS_ERROR = 1
+
     CAL_TYPE_SHORT = 1
     CAL_TYPE_OPEN = 2
     CAL_TYPE_LOAD = 3
@@ -53,6 +59,7 @@ class App:
     rbw_units = None
     power_units = None
 
+    config_status = None
     config_button = None
 
     freq_units_list = ["Гц", "кГц", "МГц", "ГГц"]
@@ -62,12 +69,15 @@ class App:
 
     cal_buttons = []
 
+    dir_path = None
+    browse_dir_button = None
+
     def __init__(self):
         self.model_loader = ModelLoader()
 
         root = tk.Tk()
 
-        root.geometry("730x480")
+        root.geometry("730x505")
         root.title("Raw data catcher")
         root.resizable(False, False)
 
@@ -125,8 +135,11 @@ class App:
         self.info_label = ttk.Label(frame, text="Прибор:")
         self.info_label.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 
-        self.address_box = ttk.Entry(frame)
-        self.address_box.grid(row=1, column=0, columnspan=3, sticky="we", padx=5)
+        self.address_box = tk.Entry(frame, relief=tk.FLAT, highlightbackground="gray", highlightthickness=1)
+        self.address_box.bind('<FocusIn>', self.__address_entry_focus_in__)
+        self.address_box.bind('<FocusOut>', self.__address_entry_focus_out__)
+        self.__address_entry_focus_out__(None)
+        self.address_box.grid(row=1, column=0, columnspan=3, sticky="we", padx=6)
 
         self.connect_button = ttk.Button(frame, text="Подключиться", command=lambda: self.__create_visa_device__())
         self.connect_button.grid(row=2, column=2, columnspan=1, padx=5, pady=5, sticky="nsew")
@@ -181,6 +194,9 @@ class App:
 
         frame.grid_rowconfigure(5, weight=1, minsize=20)
 
+        self.config_status = tk.Label(frame)
+        self.config_status.grid(row=6, column=0, columnspan=1, sticky="w", padx=5, pady=5)
+
         self.config_button = ttk.Button(frame, text="Загрузить настройки", command=lambda: self.__config_button_callback__())
         self.config_button.grid(row=6, column=1, columnspan=2, sticky="e", padx=5, pady=5)
 
@@ -204,42 +220,54 @@ class App:
         frame.grid_columnconfigure(0, weight=1)
         frame.grid_rowconfigure(0, weight=1)
 
-        for i in range(9):
-            for j in range(5):
-                if i == 0:
-                    t = ""
-                    if j == 1:
-                        t = "КЗ"
-                    if j == 2:
-                        t = "ХХ"
-                    if j == 3:
-                        t = "НАГРУЗКА"
-                    if j == 4:
-                        t = "ПЕРЕДАЧА\n(из порта 1)"
+        f_row = 0
+        f_column = 0
 
-                    if j != 0:
-                        self.cal_labels.append(ttk.Label(frame, text=t))
-                        self.cal_labels[j-1].grid(row=i, column=j, padx=5, pady=5, sticky="ns")
+        for f_row in range(9):
+            for f_column in range(5):
+                if f_row == 0:
+                    label = ""
+
+                    match f_column:
+                        case self.CAL_TYPE_SHORT:
+                            label = "КЗ"
+                        case self.CAL_TYPE_OPEN:
+                            label = "ХХ"
+                        case self.CAL_TYPE_LOAD:
+                            label = "НАГРУЗКА"
+                        case self.CAL_TYPE_CROSS:
+                            label = "ПЕРЕДАЧА\n(из порта 1)"
+
+                    if f_column != 0:
+                        self.cal_labels.append(ttk.Label(frame, text=label))
+                        self.cal_labels[f_column-1].grid(row=f_row, column=f_column, padx=5, pady=5, sticky="ns")
                 else:
-                    if j == 0:
-                        port_name = "ПОРТ %d" % i
+                    if f_column == 0:
+                        port_name = "ПОРТ %d" % f_row
                         self.port_labels.append(ttk.Label(frame, text=port_name))
-                        self.port_labels[i-1].grid(row=i, column=j, padx=5, pady=5, sticky="we")
+                        self.port_labels[f_row-1].grid(row=f_row, column=f_column, padx=5, pady=5, sticky="we")
                     else:
-                        if (i - 1) * 4 + (j - 1) == 3:
+                        if (f_row - 1) * 4 + (f_column - 1) == 3:
                             self.cal_buttons.append(None)
                             continue
                         self.cal_buttons.append(
                             tk.Button(
                                 frame,
-                                text=("Калибровка\n[❌]"),
+                                text="Калибровка\n[❌]",
                                 justify="center",
-                                command=lambda p=i, d=j: self.__cal_button_callback__(p, d)
+                                command=lambda p=f_row, d=f_column: self.__cal_button_callback__(p, d)
                             )
                         )
-                        self.cal_buttons[(i - 1) * 4 + (j - 1)].grid(row=i, column=j, padx=5, pady=5)
-                        self.cal_buttons[(i - 1) * 4 + (j - 1)].config(state="disabled")
+                        self.cal_buttons[(f_row - 1) * 4 + (f_column - 1)].grid(row=f_row, column=f_column, padx=5, pady=5)
+                        self.cal_buttons[(f_row - 1) * 4 + (f_column - 1)].config(state="disabled")
 
+        self.dir_path = ttk.Entry(frame)
+        self.dir_path.grid(row=f_row + 1, column=0, columnspan=f_column, padx=5, pady=5, sticky="nsew")
+        self.dir_path.insert(0, os.path.abspath(os.getcwd() + "/calibration"))
+        self.dir_path.xview("end")
+
+        self.browse_dir_button = ttk.Button(frame, text="Выбрать", command=lambda: self.__pick_dir__())
+        self.browse_dir_button.grid(row=f_row + 1, column=f_column, padx=5, pady=5)
 
     def __pick_file__(self):
         filetype = (
@@ -276,7 +304,10 @@ class App:
 
             if self.filepath_box.get() == "":
                 self.info_label.config(text="Прибор: ")
+
                 self.address_box.delete(0, tk.END)
+                self.address_box.insert(0, "")
+                self.__address_entry_focus_out__(None)
             else:
                 self.device_model = self.model_loader.load_model(path=self.filepath_box.get())
                 self.__fill_info__(self.device_model)
@@ -288,10 +319,13 @@ class App:
             self.info_label.config(text="Прибор: Unknown")
 
         if address := model.get("address"):
+            self.__address_entry_focus_in__(None)
             self.address_box.delete(0, tk.END)
             self.address_box.insert(0, address)
         else:
             self.address_box.delete(0, tk.END)
+            self.address_box.insert(0, "")
+            self.__address_entry_focus_out__(None)
 
     def __create_visa_device__(self):
         address = self.address_box.get()
@@ -364,7 +398,7 @@ class App:
             self.filepath_box.config(state="enabled")
             self.filepicker_button.config(state="enabled")
 
-        self.address_box.config(state="enabled")
+        self.address_box.config(state="normal")
         self.connect_button.config(text="Подключиться", command=lambda: self.__create_visa_device__())
 
         self.start_freq_label.config(state="disabled")
@@ -382,6 +416,7 @@ class App:
         self.rbw_units.config(state="disabled")
         self.power_units.config(state="disabled")
         self.config_button.config(state="disabled")
+        self.config_status.config(text="")
 
         if port_num := self.device_model.get("port_num"):
             for i in range(port_num):
@@ -394,7 +429,7 @@ class App:
     def __cal_button_callback__(self, port, cal_type):
         match cal_type:
             case self.CAL_TYPE_CROSS:
-                self.__make_trans_meas__(port)
+                self.__make_thru_meas__(port)
             case _:
                 self.__make_refl_meas__(port, cal_type)
 
@@ -418,16 +453,19 @@ class App:
 
         self.visa_device.exec_procedure(**procedure_config)
 
+        self.__show_config_status__("Успешно", self.STATUS_OK)
+
     def __make_refl_meas__(self, port, cal_type):
+        filepath = self.dir_path.get()
         r_file = None
 
         match cal_type:
             case self.CAL_TYPE_SHORT:
-                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.SHORT_FILENAME % port))
+                r_file = Reflection(filepath + "/" + (Reflection.SHORT_FILENAME % port))
             case self.CAL_TYPE_OPEN:
-                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.OPEN_FILENAME % port))
+                r_file = Reflection(filepath + "/" + (Reflection.OPEN_FILENAME % port))
             case self.CAL_TYPE_LOAD:
-                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.LOAD_FILENAME % port))
+                r_file = Reflection(filepath + "/" + (Reflection.LOAD_FILENAME % port))
 
         procedure_cfg_meas_refl["port"] = port
         self.visa_device.exec_procedure(**procedure_cfg_meas_refl)
@@ -437,15 +475,48 @@ class App:
         r_file.parse_data_to_file(data, port=port)
         r_file.close()
 
-    def __make_trans_meas__(self, port):
-        t_file = Transition(Transition.DEFAULT_FILEPATH + (Transition.CROSS_FILENAME % (port, 1)))
+    def __make_thru_meas__(self, port):
+        filepath = self.dir_path.get()
+        t_file = Thru(filepath + "/" + (Thru.CROSS_FILENAME % (1, port)))
 
-        procedure_cfg_meas_trans["port_a"] = 1
-        procedure_cfg_meas_trans["port_b"] = port
-        self.visa_device.exec_procedure(**procedure_cfg_meas_trans)
+        procedure_cfg_meas_thru["port_a"] = 1
+        procedure_cfg_meas_thru["port_b"] = port
+        self.visa_device.exec_procedure(**procedure_cfg_meas_thru)
 
-        data = self.visa_device.exec_procedure(**procedure_trans_meas)
+        data = self.visa_device.exec_procedure(**procedure_thru_meas)
 
         t_file.parse_data_to_file(data, port_a=1, port_b=port)
         t_file.close()
+
+    def __show_config_status__(self, status, status_type):
+        text_color = None
+
+        match status_type:
+            case self.STATUS_OK:
+                text_color = "green"
+            case self.STATUS_ERROR:
+                text_color = "red"
+
+        # TODO: Добавить асинхронную анимацию мигания текста
+        self.config_status.config(text=status, fg=text_color)
+
+    def __pick_dir__(self):
+        self.filename = fd.askdirectory(
+            title="Open model file",
+            initialdir="./")
+
+        self.dir_path.delete(0, tk.END)
+        self.dir_path.insert(0, self.filename)
+        self.dir_path.xview("end")
+
+    def __address_entry_focus_in__(self, event):
+        if self.address_box.get() == "Введите VISA-адрес":
+            self.address_box.delete(0, "end")
+            self.address_box.insert(0, "")
+            self.address_box.config(fg="black")
+
+    def __address_entry_focus_out__(self, event):
+        if self.address_box.get() == "":
+            self.address_box.insert(0, "Введите VISA-адрес")
+            self.address_box.config(fg="gray")
 

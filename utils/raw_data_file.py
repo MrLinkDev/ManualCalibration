@@ -6,20 +6,21 @@
 #
 # Reflection file mask:
 # FREQ(HZ)\tS%d%d(REAL)\tS%d%d(IMAG)
+import os.path
 
 
-# Transition file structure:
+# Thru file structure:
 #
 # BEGIN CH1_DATA
 # FREQ(HZ)\tS11(REAL)\tS11(IMAG)\tS21(REAL)\tS21(IMAG)\tA2/A1(REAL)\tA2/A1(IMAG)\tS22(REAL)\tS22(IMAG)\tS12(REAL)\tS12(IMAG)\tA1/A2(REAL)\tA1/A2(IMAG)
 # END
 #
-# Transition file mask:
+# Thru file mask:
 # FREQ(HZ)\tS%d%d(REAL)\tS%d%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tA%d/A%d(REAL)\tA%d/A%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tS%d%d(REAL)\tS%d%d(IMAG)\tA%d/A%d(REAL)\tA%d/A%d(IMAG)
 
 
 class RawDataFile:
-    DEFAULT_FILEPATH = "calibration/"
+    DEFAULT_FOLDER = "calibration/"
     DEFAULT_FILE_EXTENSION = ".csv"
 
     file = None
@@ -27,7 +28,12 @@ class RawDataFile:
     TITLE_MASK = None
     ROW_MASK = None
 
-    def __init__(self, path=DEFAULT_FILEPATH):
+    def __init__(self, path=DEFAULT_FOLDER):
+        print(path)
+        if path == self.DEFAULT_FOLDER:
+            path += "temp"
+
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         self.file = open(path + self.DEFAULT_FILE_EXTENSION, 'w')
 
     def write(self, data):
@@ -88,7 +94,7 @@ class Reflection(RawDataFile):
         self.write(file_data)
 
 
-class Transition(RawDataFile):
+class Thru(RawDataFile):
     CROSS_FILENAME = "t%d%d"
 
     TITLE_MASK = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)\tS{1}{0}(REAL)\tS{1}{0}(IMAG)\ta{1}/a{0}(REAL)\ta{1}/a{0}(IMAG)\tS{1}{1}(REAL)\tS{1}{1}(IMAG)\tS{0}{1}(REAL)\tS{0}{1}(IMAG)\ta{0}/a{1}(REAL)\ta{0}/a{1}(IMAG)"

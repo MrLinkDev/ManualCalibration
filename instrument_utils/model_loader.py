@@ -22,6 +22,8 @@ class ModelLoader:
         return VisaDevice(**model)
 
     def load_model(self, device_name=None, path=None):
+        model_path = None
+
         if device_name is not None:
             model_path = self.device_list.get(device_name)
         if path is not None:

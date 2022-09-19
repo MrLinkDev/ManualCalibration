@@ -38,6 +38,9 @@
 
         "device_config": [
             {
+                "cmd": ":FORMat:DATA ASCII,0"
+            },
+            {
                 "cmd": "SENSE:FREQUENCY:START %d",
                 "args": [
                     "start_freq"
@@ -96,7 +99,7 @@
             }
         ],
 
-        "create_meas_transition" : [
+        "create_meas_thru" : [
             {
                 "cmd": "CALCULATE:PARAMETER:DELETE:ALL"
             },
@@ -209,7 +212,7 @@
             }
         ],
 
-        "get_trans_meas": [
+        "get_thru_meas": [
             {
                 "cmd": "SENSE:FREQ:START?"
             },

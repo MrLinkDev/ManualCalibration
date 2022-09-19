@@ -36,6 +36,7 @@ class VisaDevice(Device):
                 self.level = self.LEVEL_NONE
 
     def exec_procedure(self, **kwargs):
+        # TODO: Добавить в процедуры возможность создать цикл
         out = []
         cmd_list = self.procedure_list.get(kwargs.get("procedure_name"))
 

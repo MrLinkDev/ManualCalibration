@@ -20,8 +20,8 @@ procedure_cfg_meas_refl = {
     "port": None
 }
 
-procedure_cfg_meas_trans = {
-    "procedure_name": "create_meas_transition",
+procedure_cfg_meas_thru = {
+    "procedure_name": "create_meas_thru",
     "port_a": None,
     "port_b": None
 }
@@ -30,6 +30,7 @@ procedure_refl_meas = {
     "procedure_name": "get_refl_meas"
 }
 
-procedure_trans_meas = {
-    "procedure_name": "get_trans_meas"
+procedure_thru_meas = {
+    "procedure_name": "get_thru_meas"
 }
+
