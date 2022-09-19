@@ -3,10 +3,16 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog as fd
 from instrument_utils.model_loader import ModelLoader, VisaDevice
+from utils.raw_data_file import Reflection, Transition
 from utils.procedure_dict import *
 
 
 class App:
+    CAL_TYPE_SHORT = 1
+    CAL_TYPE_OPEN = 2
+    CAL_TYPE_LOAD = 3
+    CAL_TYPE_CROSS = 4
+
     model_loader = None
     device_model = None
     visa_device = None
@@ -308,7 +314,7 @@ class App:
             self.filepicker_button.config(state="disabled")
 
             self.address_box.config(state="disabled")
-            self.connect_button.config(text="Отключить", command=lambda: self.__destroy_visa_device__())
+            self.connect_button.config(text="Отключиться", command=lambda: self.__destroy_visa_device__())
 
             self.start_freq_label.config(state="enabled")
             self.stop_freq_label.config(state="enabled")
@@ -359,7 +365,7 @@ class App:
             self.filepicker_button.config(state="enabled")
 
         self.address_box.config(state="enabled")
-        self.connect_button.config(text="Подключить", command=lambda: self.__create_visa_device__())
+        self.connect_button.config(text="Подключиться", command=lambda: self.__create_visa_device__())
 
         self.start_freq_label.config(state="disabled")
         self.stop_freq_label.config(state="disabled")
@@ -386,6 +392,12 @@ class App:
                     self.cal_buttons[i * 4 + j].config(state="disabled")
 
     def __cal_button_callback__(self, port, cal_type):
+        match cal_type:
+            case self.CAL_TYPE_CROSS:
+                self.__make_trans_meas__(port)
+            case _:
+                self.__make_refl_meas__(port, cal_type)
+
         if "❌" in self.cal_buttons[(port - 1) * 4 + (cal_type - 1)].cget('text'):
             self.cal_buttons[(port - 1) * 4 + (cal_type - 1)].config(text="Калибровка\n[✔]")
         elif "✔" in self.cal_buttons[(port - 1) * 4 + (cal_type - 1)].cget('text') and "✔✔" not in self.cal_buttons[(port - 1) * 4 + (cal_type - 1)].cget('text'):
@@ -406,4 +418,34 @@ class App:
 
         self.visa_device.exec_procedure(**procedure_config)
 
+    def __make_refl_meas__(self, port, cal_type):
+        r_file = None
+
+        match cal_type:
+            case self.CAL_TYPE_SHORT:
+                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.SHORT_FILENAME % port))
+            case self.CAL_TYPE_OPEN:
+                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.OPEN_FILENAME % port))
+            case self.CAL_TYPE_LOAD:
+                r_file = Reflection(Reflection.DEFAULT_FILEPATH + (Reflection.LOAD_FILENAME % port))
+
+        procedure_cfg_meas_refl["port"] = port
+        self.visa_device.exec_procedure(**procedure_cfg_meas_refl)
+
+        data = self.visa_device.exec_procedure(**procedure_refl_meas)
+
+        r_file.parse_data_to_file(data, port=port)
+        r_file.close()
+
+    def __make_trans_meas__(self, port):
+        t_file = Transition(Transition.DEFAULT_FILEPATH + (Transition.CROSS_FILENAME % (port, 1)))
+
+        procedure_cfg_meas_trans["port_a"] = 1
+        procedure_cfg_meas_trans["port_b"] = port
+        self.visa_device.exec_procedure(**procedure_cfg_meas_trans)
+
+        data = self.visa_device.exec_procedure(**procedure_trans_meas)
+
+        t_file.parse_data_to_file(data, port_a=1, port_b=port)
+        t_file.close()
 

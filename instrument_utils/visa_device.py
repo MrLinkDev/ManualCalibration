@@ -38,7 +38,6 @@ class VisaDevice(Device):
     def exec_procedure(self, **kwargs):
         out = []
         cmd_list = self.procedure_list.get(kwargs.get("procedure_name"))
-        print(cmd_list)
 
         for cmd_item in cmd_list:
             cmd = cmd_item.get("cmd")

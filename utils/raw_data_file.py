@@ -19,22 +19,22 @@
 
 
 class RawDataFile:
-    DEFAULT_FILEPATH = "../calibration/"
+    DEFAULT_FILEPATH = "calibration/"
     DEFAULT_FILE_EXTENSION = ".csv"
 
     file = None
 
-    title_mask = None
-    row_mask = None
+    TITLE_MASK = None
+    ROW_MASK = None
 
     def __init__(self, path=DEFAULT_FILEPATH):
         self.file = open(path + self.DEFAULT_FILE_EXTENSION, 'w')
 
     def write(self, data):
-        self.file.write(self.title_mask.format(*data.get("title")))
+        self.file.write(self.TITLE_MASK.format(*data.get("title")))
         self.file.write("\n")
         for d in data.get("content"):
-            self.file.write(self.row_mask % tuple(d))
+            self.file.write(self.ROW_MASK % tuple(d))
             self.file.write("\n")
 
     def close(self):
@@ -44,8 +44,12 @@ class RawDataFile:
 
 
 class Reflection(RawDataFile):
-    title_mask = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)"
-    row_mask = "%s\t%s\t%s"
+    SHORT_FILENAME = "s%d"
+    OPEN_FILENAME = "o%d"
+    LOAD_FILENAME = "l%d"
+
+    TITLE_MASK = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)"
+    ROW_MASK = "%s\t%s\t%s"
 
     # Input data format:
     # data = {
@@ -85,8 +89,10 @@ class Reflection(RawDataFile):
 
 
 class Transition(RawDataFile):
-    title_mask = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)\tS{1}{0}(REAL)\tS{1}{0}(IMAG)\ta{1}/a{0}(REAL)\ta{1}/a{0}(IMAG)\tS{1}{1}(REAL)\tS{1}{1}(IMAG)\tS{0}{1}(REAL)\tS{0}{1}(IMAG)\ta{0}/a{1}(REAL)\ta{0}/a{1}(IMAG)"
-    row_mask = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
+    CROSS_FILENAME = "t%d%d"
+
+    TITLE_MASK = "FREQ(HZ)\tS{0}{0}(REAL)\tS{0}{0}(IMAG)\tS{1}{0}(REAL)\tS{1}{0}(IMAG)\ta{1}/a{0}(REAL)\ta{1}/a{0}(IMAG)\tS{1}{1}(REAL)\tS{1}{1}(IMAG)\tS{0}{1}(REAL)\tS{0}{1}(IMAG)\ta{0}/a{1}(REAL)\ta{0}/a{1}(IMAG)"
+    ROW_MASK = "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s"
 
     # Input data format:
     # data = {

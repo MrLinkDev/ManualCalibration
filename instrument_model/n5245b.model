@@ -77,7 +77,7 @@
 
         "create_meas_reflection" : [
             {
-                "cmd": ":SYSTEM:FPRESET"
+                "cmd": "CALCULATE:PARAMETER:DELETE:ALL"
             },
             {
                 "cmd": "DISPLAY:WINDOW1:STATE ON"
@@ -98,7 +98,7 @@
 
         "create_meas_transition" : [
             {
-                "cmd": ":SYSTEM:FPRESET"
+                "cmd": "CALCULATE:PARAMETER:DELETE:ALL"
             },
             {
                 "cmd": "DISPLAY:WINDOW1:STATE ON"

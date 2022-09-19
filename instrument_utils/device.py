@@ -10,7 +10,6 @@ class Device:
     procedure_list = {}
 
     def __init__(self, **kwargs):
-        print(kwargs)
         if vendor := kwargs.get("vendor"):
             self.vendor = vendor
         if model := kwargs.get("model"):

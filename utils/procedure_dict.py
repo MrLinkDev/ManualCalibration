@@ -17,13 +17,13 @@ procedure_config = {
 
 procedure_cfg_meas_refl = {
     "procedure_name": "create_meas_reflection",
-    "port": 1
+    "port": None
 }
 
 procedure_cfg_meas_trans = {
     "procedure_name": "create_meas_transition",
-    "port_a": 1,
-    "port_b": 2
+    "port_a": None,
+    "port_b": None
 }
 
 procedure_refl_meas = {
