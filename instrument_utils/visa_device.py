@@ -37,6 +37,9 @@ class VisaDevice(Device):
 
     def exec_procedure(self, **kwargs):
         # TODO: Добавить в процедуры возможность создать цикл
+        # TODO: Добавить возможность провести математические операции,
+        #   которые будут заданы в файле модели
+
         out = []
         cmd_list = self.procedure_list.get(kwargs.get("procedure_name"))
 
@@ -64,9 +67,13 @@ class VisaDevice(Device):
             return out
 
     def send(self, cmd):
+        print("->", cmd)
+
         self.wait()
         if "?" in cmd:
             out = self.instrument.query(cmd)
+            print("<-", out)
+
             self.instrument.write("*OPC")
 
             self.check_error()
@@ -82,13 +89,11 @@ class VisaDevice(Device):
         err = self.instrument.query(":SYST:ERR?")
 
         if "No error" not in err:
-            logging.error(err)
-        else:
-            logging.debug(err)
+            print("<-", err)
 
     def wait(self):
         opc = self.instrument.query("*OPC?")
-        while opc != "+1":
+        while opc != "+1" and opc != "1":
             sleep(0.01)
             opc = self.instrument.query("*OPC?")
 

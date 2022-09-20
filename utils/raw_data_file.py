@@ -71,8 +71,9 @@ class Reflection(RawDataFile):
     def parse_data_to_file(self, data, **kwargs):
         freq_start = float(data[0])
         freq_stop = float(data[1])
-        freq_step = float(data[2])
-        points = int(data[3])
+        points = int(data[2])
+
+        freq_step = (freq_stop - freq_start) / (points - 1)
 
         data = data.pop(-1)
         data = data.split(',')
@@ -117,8 +118,9 @@ class Thru(RawDataFile):
     def parse_data_to_file(self, data, **kwargs):
         freq_start = float(data[0])
         freq_stop = float(data[1])
-        freq_step = float(data[2])
-        points = int(data[3])
+        points = int(data[2])
+
+        freq_step = (freq_stop - freq_start) / (points - 1)
 
         data = data[-6:]
 

@@ -107,40 +107,40 @@
                 "cmd": "DISPLAY:WINDOW1:STATE ON"
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "cmd": "CALCULATE1:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
                 "args": [
                     "port_a"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{1}{0}', 'S{1}{0}'",
+                "cmd": "CALCULATE2:PARAMETER:DEFINE:EXTENDED 'S{1}{0}', 'S{1}{0}'",
                 "args": [
                     "port_a",
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'a{1}/a{0}', 'a{1}/a{0},{0}'",
+                "cmd": "CALCULATE3:PARAMETER:DEFINE:EXTENDED 'a{1}/a{0}', 'a{1}/a{0},{0}'",
                 "args": [
                     "port_a",
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "cmd": "CALCULATE4:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
                 "args": [
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{1}', 'S{0}{1}'",
+                "cmd": "CALCULATE5:PARAMETER:DEFINE:EXTENDED 'S{0}{1}', 'S{0}{1}'",
                 "args": [
                     "port_a",
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'a{0}/a{1}', 'a{0}/a{1},{1}'",
+                "cmd": "CALCULATE6:PARAMETER:DEFINE:EXTENDED 'a{0}/a{1}', 'a{0}/a{1},{1}'",
                 "args": [
                     "port_a",
                     "port_b"
@@ -196,9 +196,6 @@
                 "cmd": "SENSE:FREQ:STOP?"
             },
             {
-                "cmd": "SENSE:SWEEP:STEP?"
-            },
-            {
                 "cmd": "SENSE:SWEEP:POINTS?"
             },
             {
@@ -220,9 +217,6 @@
                 "cmd": "SENSE:FREQ:STOP?"
             },
             {
-                "cmd": "SENSE:SWEEP:STEP?"
-            },
-            {
                 "cmd": "SENSE:SWEEP:POINTS?"
             },
             {
@@ -232,40 +226,22 @@
                 "cmd": "INITIATE:IMMEDIATE"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE1:SELECT"
+                "cmd": "CALCULATE1:DATA? SDATA"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE2:DATA? SDATA"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE2:SELECT"
+                "cmd": "CALCULATE3:DATA? SDATA"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE4:DATA? SDATA"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE3:SELECT"
+                "cmd": "CALCULATE5:DATA? SDATA"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE4:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE5:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE6:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE6:DATA? SDATA"
             }
         ]
     }

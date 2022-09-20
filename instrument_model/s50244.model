@@ -6,7 +6,7 @@
     },
 
     "config": {
-        "address": "TCPIP0::192.168.110.128::inst0::INSTR",
+        "address": "TCPIP0::localhost::5100::SOCKET",
         "timeout": 10000,
         "termination": "\n",
         "log_level": "opc_and_err"
@@ -37,6 +37,9 @@
         ],
 
         "device_config": [
+            {
+                "cmd": "SYSTEM:PRESET"
+            },
             {
                 "cmd": ":FORMat:DATA ASCII"
             },
@@ -80,16 +83,13 @@
 
         "create_meas_reflection" : [
             {
-                "cmd": "SYSTEM:PRESET"
-            },
-            {
                 "cmd": "DISPLAY:SPLIT 1"
             },
             {
                 "cmd": "CALCULATE:PARAMETER:COUNT 1"
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "cmd": "CALCULATE:PARAMETER:DEFINE S{0}{0}",
                 "args": [
                     "port"
                 ]
@@ -98,63 +98,63 @@
 
         "create_meas_thru" : [
             {
-                "cmd": "SYSTEM:PRESET"
-            },
-            {
                 "cmd": "DISPLAY:SPLIT 1"
             },
             {
                 "cmd": "CALCULATE:PARAMETER:COUNT 6"
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "cmd": "CALCULATE:PARAMETER1:DEFINE S{0}{0}",
                 "args": [
                     "port_a"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{1}{0}'",
+                "cmd": "CALCULATE:PARAMETER2:DEFINE S{1}{0}",
                 "args": [
                     "port_a",
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'R{0}'",
+                "cmd": "CALCULATE:PARAMETER3:DEFINE R{0}",
                 "args": [
                     "port_a"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{0}'",
+                "cmd": "CALCULATE:PARAMETER3:SPORT 1"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER4:DEFINE S{0}{0}",
                 "args": [
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'S{0}{1}'",
+                "cmd": "CALCULATE:PARAMETER5:DEFINE S{0}{1}",
                 "args": [
                     "port_a",
                     "port_b"
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER1:DEFINE 'R{0}'",
+                "cmd": "CALCULATE:PARAMETER6:DEFINE R{0}",
                 "args": [
                     "port_b"
                 ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER6:SPORT 1"
             }
         ],
 
         "get_refl_meas": [
             {
-                "cmd": "SENSE:FREQ:START?"
+                "cmd": "SENSE1:FREQ:START?"
             },
             {
-                "cmd": "SENSE:FREQ:STOP?"
-            },
-            {
-                "cmd": "SENSE:SWEEP:STEP?"
+                "cmd": "SENSE1:FREQ:STOP?"
             },
             {
                 "cmd": "SENSE:SWEEP:POINTS?"
@@ -166,7 +166,7 @@
                 "cmd": "INITIATE:IMMEDIATE"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE:DATA:SDATA?"
             }
         ],
 
@@ -178,9 +178,6 @@
                 "cmd": "SENSE:FREQ:STOP?"
             },
             {
-                "cmd": "SENSE:SWEEP:STEP?"
-            },
-            {
                 "cmd": "SENSE:SWEEP:POINTS?"
             },
             {
@@ -190,40 +187,22 @@
                 "cmd": "INITIATE:IMMEDIATE"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE1:SELECT"
+                "cmd": "CALCULATE:TRACE1:DATA:SDATA?"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE:TRACE2:DATA:SDATA?"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE2:SELECT"
+                "cmd": "CALCULATE:TRACE3:DATA:SDATA?"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE:TRACE4:DATA:SDATA?"
             },
             {
-                "cmd": "DISPLAY:WINDOW:TRACE3:SELECT"
+                "cmd": "CALCULATE:TRACE5:DATA:SDATA?"
             },
             {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE4:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE5:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
-            },
-            {
-                "cmd": "DISPLAY:WINDOW:TRACE6:SELECT"
-            },
-            {
-                "cmd": "CALCULATE:DATA? SDATA"
+                "cmd": "CALCULATE:TRACE6:DATA:SDATA?"
             }
         ]
     }
