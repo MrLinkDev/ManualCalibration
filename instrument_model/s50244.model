@@ -193,7 +193,11 @@
                 "cmd": "CALCULATE:TRACE2:DATA:SDATA?"
             },
             {
-                "cmd": "CALCULATE:TRACE3:DATA:SDATA?"
+                "cmd_1": "CALCULATE:TRACE3:DATA:SDATA?",
+                "var_1": "a1",
+                "cmd_2": "CALCULATE:TRACE6:DATA:SDATA?",
+                "var_2": "a2",
+                "math": "complex;a2 / a1"
             },
             {
                 "cmd": "CALCULATE:TRACE4:DATA:SDATA?"
@@ -202,7 +206,11 @@
                 "cmd": "CALCULATE:TRACE5:DATA:SDATA?"
             },
             {
-                "cmd": "CALCULATE:TRACE6:DATA:SDATA?"
+                "cmd_1": "CALCULATE:TRACE3:DATA:SDATA?",
+                "var_1": "a1",
+                "cmd_2": "CALCULATE:TRACE6:DATA:SDATA?",
+                "var_2": "a2",
+                "math": "complex;a1 / a2"
             }
         ]
     }

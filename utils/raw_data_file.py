@@ -76,7 +76,8 @@ class Reflection(RawDataFile):
         freq_step = (freq_stop - freq_start) / (points - 1)
 
         data = data.pop(-1)
-        data = data.split(',')
+        if type(data) is not list:
+            data = data.split(',')
 
         re = data[0::2]
         im = data[1::2]
@@ -128,7 +129,8 @@ class Thru(RawDataFile):
         im = []
 
         for i in range(len(data)):
-            data[i] = data[i].split(',')
+            if type(data[i]) is not list:
+                data[i] = data[i].split(',')
 
             re.append(data[i][0::2])
             im.append(data[i][1::2])

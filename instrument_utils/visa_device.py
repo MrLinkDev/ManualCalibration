@@ -40,31 +40,118 @@ class VisaDevice(Device):
         # TODO: Добавить возможность провести математические операции,
         #   которые будут заданы в файле модели
 
+
         out = []
         cmd_list = self.procedure_list.get(kwargs.get("procedure_name"))
 
         for cmd_item in cmd_list:
-            cmd = cmd_item.get("cmd")
-            if arg_list := cmd_item.get("args"):
-                args = []
-                for arg_name in arg_list:
-                    if arg := kwargs.get(arg_name):
-                        args.append(arg)
+            var = {}
 
-                if "{0}" in cmd:
-                    tmp = self.send(cmd.format(*args))
+            if "cmd" in cmd_item:
+                cmd = cmd_item.get("cmd")
+                if arg_list := cmd_item.get("args"):
+                    args = []
+                    for arg_name in arg_list:
+                        if arg := kwargs.get(arg_name):
+                            args.append(arg)
+
+                    if "{0}" in cmd:
+                        tmp = self.send(cmd.format(*args))
+                    else:
+                        tmp = self.send(cmd % tuple(args))
                 else:
-                    tmp = self.send(cmd % tuple(args))
-            else:
-                tmp = self.send(cmd)
+                    tmp = self.send(cmd)
 
-            if tmp is not None:
-                out.append(tmp)
+                if var_name := cmd_item.get("var"):
+                    var.update({var_name: tmp})
+
+                if math_command := cmd_item.get("math"):
+                    tmp = self.__produce_result__(math_command, var)
+
+                if tmp is not None:
+                    out.append(tmp)
+            else:
+                n = 1
+                tmp = None
+
+                while cmd := cmd_item.get("cmd_%d" % n):
+                    if arg_list := cmd_item.get("args_%d" % n):
+                        args = []
+                        for arg_name in arg_list:
+                            if arg := kwargs.get(arg_name):
+                                args.append(arg)
+
+                        if "{0}" in cmd:
+                            tmp = self.send(cmd.format(*args))
+                        else:
+                            tmp = self.send(cmd % tuple(args))
+                    else:
+                        tmp = self.send(cmd)
+
+                    if var_name := cmd_item.get("var_%d" % n):
+                        var.update({var_name: tmp})
+
+                    n += 1
+
+                if math_command := cmd_item.get("math"):
+                    tmp = self.__produce_result__(math_command, var)
+
+                if tmp is not None:
+                    out.append(tmp)
 
         if len(out) == 1:
             return out[0]
         else:
             return out
+
+    def __produce_result__(self, math_command, data):
+        # TODO: Сделать более гибки обработчик математических комманд,
+        #   или переделать его, потому что он не сможет обработать
+        #   больше одной математической операции
+
+        math_command = math_command.split(";")
+        math_sequence = math_command[1].split(" ")
+
+        a1 = data.get(math_sequence[0])
+        a2 = data.get(math_sequence[2])
+
+        match math_command[0]:
+            case "complex":
+                match math_sequence[1]:
+                    case "+":
+                        print("+")
+                    case "-":
+                        print("-")
+                    case "*":
+                        print("*")
+                    case "/":
+                        out = []
+
+                        for i in range(0, len(a1), 2):
+                            div = self.__complex_div__(a1[i], a1[i + 1], a2[i], a2[i + 1])
+                            out.extend(div)
+            case _:
+                print("another")
+
+        return out
+
+    def __complex_div__(self, re_a, im_a, re_b, im_b):
+        print(re_a)
+        re_a = float(re_a)
+        re_b = float(re_b)
+        im_a = float(im_a)
+        im_b = float(im_b)
+
+        abs_2 = re_b ** 2 + im_b ** 2
+
+        if abs_2 == 0:
+            return [0, 0]
+        else:
+            re = (re_a * re_b + im_a * im_b) / abs_2
+            im = (re_b * im_a + im_b * re_a) / abs_2
+
+            return [re, im]
+
 
     def send(self, cmd):
         print("->", cmd)
@@ -77,6 +164,11 @@ class VisaDevice(Device):
             self.instrument.write("*OPC")
 
             self.check_error()
+            if "," in out:
+                out = out.split(",")
+                for i in range(len(out)):
+                    out[i] = float(out[i])
+
             return out
         else:
             self.instrument.write(cmd)
