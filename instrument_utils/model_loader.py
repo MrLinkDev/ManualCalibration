@@ -1,5 +1,6 @@
 import os
 import json
+import shutil
 
 from instrument_utils.visa_device import VisaDevice
 
@@ -9,6 +10,9 @@ class ModelLoader:
     FILE_EXTENSION = ".model"
 
     device_list = {}
+
+    data_file = None
+    data_dump = None
 
     def __init__(self, directory=DEFAULT_DIR):
         file_list = os.listdir(directory)
@@ -29,19 +33,28 @@ class ModelLoader:
         if path is not None:
             model_path = path
 
-        data = json.load(open(model_path))
+        self.data_file = open(model_path, 'r+')
+        self.data_dump = json.load(self.data_file)
 
         model = {}
-        if info := data.get("info"):
+
+        if info := self.data_dump.get("info"):
             model.update(info)
-        if config := data.get("config"):
+        if config := self.data_dump.get("config"):
             model.update(config)
-        if params := data.get("params"):
+        if params := self.data_dump.get("params"):
             model["params"] = params
-        if procedure := data.get("procedure_dict"):
+        if procedure := self.data_dump.get("procedure_dict"):
             model["procedure_dict"] = procedure
 
         return model
+
+    def update_model(self, category, name, value):
+        self.data_dump[category][name] = value
+
+        self.data_file.seek(0)
+        json.dump(self.data_dump, self.data_file, indent=4)
+        self.data_file.truncate()
 
     def get_device_list(self):
         return self.device_list.keys()

@@ -331,6 +331,7 @@ class App:
         address = self.address_box.get()
         if self.device_model.get("address") != address:
             self.device_model["address"] = address
+            self.model_loader.update_model("config", "address", address)
 
         self.visa_device = VisaDevice(**self.device_model)
 
@@ -367,16 +368,20 @@ class App:
             self.config_button.config(state="normal")
 
             if params := self.device_model.get("params"):
-                if start_freq := params.get("start_freq"):
-                    self.start_freq_sb.set(start_freq)
-                if stop_freq := params.get("stop_freq"):
-                    self.stop_freq_sb.set(stop_freq)
-                if points := params.get("points"):
-                    self.points_sb.set(points)
-                if rbw := params.get("rbw"):
-                    self.rbw_sb.set(rbw)
-                if power := params.get("power"):
-                    self.power_sb.set(power)
+                start_freq = params.get("start_freq")
+                self.start_freq_sb.set(start_freq)
+
+                stop_freq = params.get("stop_freq")
+                self.stop_freq_sb.set(stop_freq)
+
+                points = params.get("points")
+                self.points_sb.set(points)
+
+                rbw = params.get("rbw")
+                self.rbw_sb.set(rbw)
+
+                power = params.get("power")
+                self.power_sb.set(power)
 
             if port_num := self.device_model.get("port_num"):
                 for i in range(port_num):
@@ -443,7 +448,7 @@ class App:
         stop_freq = float(self.stop_freq_sb.get()) * (10 ** (3 * self.stop_freq_units.current()))
         points = int(self.points_sb.get())
         rbw = float(self.rbw_sb.get()) * (10 ** (3 * self.rbw_units.current()))
-        power = int(self.power_sb.get())
+        power = float(self.power_sb.get())
 
         procedure_config["start_freq"] = start_freq
         procedure_config["stop_freq"] = stop_freq
@@ -454,6 +459,12 @@ class App:
         self.visa_device.exec_procedure(**procedure_config)
 
         self.__show_config_status__("Успешно", self.STATUS_OK)
+
+        self.model_loader.update_model("params", "start_freq", start_freq)
+        self.model_loader.update_model("params", "stop_freq", stop_freq)
+        self.model_loader.update_model("params", "points", points)
+        self.model_loader.update_model("params", "rbw", rbw)
+        self.model_loader.update_model("params", "power", power)
 
     def __make_refl_meas__(self, port, cal_type):
         filepath = self.dir_path.get()

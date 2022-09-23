@@ -4,29 +4,25 @@
         "model": "S50224",
         "port_num": 2
     },
-
     "config": {
-        "address": "TCPIP0::localhost::5100::SOCKET",
+        "address": "TCPIP0::localhost::5025::SOCKET",
         "timeout": 10000,
         "termination": "\n",
         "log_level": "opc_and_err"
     },
-
     "params": {
-        "start_freq": 1e9,
-        "stop_freq": 3e9,
+        "start_freq": 10000000.0,
+        "stop_freq": 40000000000.0,
         "points": 501,
-        "rbw": 1e3,
-        "power": -25
+        "rbw": 1000.0,
+        "power": 0.0
     },
-
     "procedure_dict": {
         "get_info": [
             {
                 "cmd": "*IDN?"
             }
         ],
-
         "reset": [
             {
                 "cmd": "*RST"
@@ -35,7 +31,6 @@
                 "cmd": "*CLS"
             }
         ],
-
         "device_config": [
             {
                 "cmd": "SYSTEM:PRESET"
@@ -80,8 +75,7 @@
                 ]
             }
         ],
-
-        "create_meas_reflection" : [
+        "create_meas_reflection": [
             {
                 "cmd": "DISPLAY:SPLIT 1"
             },
@@ -95,8 +89,7 @@
                 ]
             }
         ],
-
-        "create_meas_thru" : [
+        "create_meas_thru": [
             {
                 "cmd": "DISPLAY:SPLIT 1"
             },
@@ -148,8 +141,13 @@
                 "cmd": "CALCULATE:PARAMETER6:SPORT 1"
             }
         ],
-
         "get_refl_meas": [
+            {
+                "cmd": ":TRIG:SOUR BUS"
+            },
+            {
+                "cmd": ":TRIG:SING"
+            },
             {
                 "cmd": "SENSE1:FREQ:START?"
             },
@@ -160,17 +158,16 @@
                 "cmd": "SENSE:SWEEP:POINTS?"
             },
             {
-                "cmd": "INITIATE:CONTINUOUS OFF"
-            },
-            {
-                "cmd": "INITIATE:IMMEDIATE"
-            },
-            {
                 "cmd": "CALCULATE:DATA:SDATA?"
             }
         ],
-
         "get_thru_meas": [
+            {
+                "cmd": ":TRIG:SOUR BUS"
+            },
+            {
+                "cmd": ":TRIG:SING"
+            },
             {
                 "cmd": "SENSE:FREQ:START?"
             },
@@ -179,12 +176,6 @@
             },
             {
                 "cmd": "SENSE:SWEEP:POINTS?"
-            },
-            {
-                "cmd": "INITIATE:CONTINUOUS OFF"
-            },
-            {
-                "cmd": "INITIATE:IMMEDIATE"
             },
             {
                 "cmd": "CALCULATE:TRACE1:DATA:SDATA?"
