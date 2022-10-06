@@ -94,7 +94,7 @@
                 "cmd": "DISPLAY:SPLIT 1"
             },
             {
-                "cmd": "CALCULATE:PARAMETER:COUNT 6"
+                "cmd": "CALCULATE:PARAMETER:COUNT 8"
             },
             {
                 "cmd": "CALCULATE:PARAMETER1:DEFINE S{0}{0}",
@@ -139,6 +139,24 @@
             },
             {
                 "cmd": "CALCULATE:PARAMETER6:SPORT 2"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER7:DEFINE R{0}",
+                "args": [
+                    "port_a"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER7:SPORT 1"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER8:DEFINE R{0}",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER8:SPORT 1"
             }
         ],
         "get_refl_meas": [
@@ -184,9 +202,9 @@
                 "cmd": "CALCULATE:TRACE2:DATA:SDATA?"
             },
             {
-                "cmd_1": "CALCULATE:TRACE3:DATA:SDATA?",
+                "cmd_1": "CALCULATE:TRACE7:DATA:SDATA?",
                 "var_1": "a1",
-                "cmd_2": "CALCULATE:TRACE6:DATA:SDATA?",
+                "cmd_2": "CALCULATE:TRACE8:DATA:SDATA?",
                 "var_2": "a2",
                 "math": "complex;a2 / a1"
             },
