@@ -116,7 +116,7 @@
                 ]
             },
             {
-                "cmd": "CALCULATE:PARAMETER3:SPORT 1"
+                "cmd": "CALCULATE:PARAMETER3:SPORT 2"
             },
             {
                 "cmd": "CALCULATE:PARAMETER4:DEFINE S{0}{0}",
