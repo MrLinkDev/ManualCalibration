@@ -33,6 +33,9 @@
         ],
         "device_config": [
             {
+                SYSTEM:PRESET
+            },
+            {
                 "cmd": ":FORMat:DATA ASCII,0"
             },
             {
@@ -61,6 +64,12 @@
                 "args": [
                     "rbw"
                 ]
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE ON"
+            },
+            {
+                "cmd": "SOURCE:POWER:MODE AUTO"
             },
             {
                 "cmd": "SOURCE:POWER:COUPLE OFF"
@@ -116,6 +125,21 @@
                 "cmd": "SENSE:BANDWIDTH %d",
                 "args": [
                     "rbw"
+                ]
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE ON"
+            },
+            {
+                "cmd": "SOURCE:POWER:MODE AUTO"
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE OFF"
+            },
+            {
+                "cmd": "SOURCE:POWER1 %d",
+                "args": [
+                    "power"
                 ]
             }
         ],
@@ -366,6 +390,21 @@
                 "cmd": "SENSE6:BANDWIDTH %d",
                 "args": [
                     "rbw"
+                ]
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE ON"
+            },
+            {
+                "cmd": "SOURCE:POWER:MODE AUTO"
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE OFF"
+            },
+            {
+                "cmd": "SOURCE:POWER1 %d",
+                "args": [
+                    "power"
                 ]
             }
         ],

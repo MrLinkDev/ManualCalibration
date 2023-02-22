@@ -22,6 +22,7 @@ procedure_cfg_meas_refl = {
     "stop_freq": None,
     "points": None,
     "rbw": None,
+    "power": None
 }
 
 procedure_cfg_meas_thru = {
@@ -32,6 +33,7 @@ procedure_cfg_meas_thru = {
     "stop_freq": None,
     "points": None,
     "rbw": None,
+    "power": None
 }
 
 procedure_refl_meas = {
