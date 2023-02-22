@@ -1,0 +1,428 @@
+{
+    "info": {
+        "vendor": "keysight",
+        "model": "PXI CHASSIS",
+        "port_num": 8
+    },
+    "config": {
+        "address": "TCPIP0::K-M9037A-30881::hislip_PXI0_CHASSIS1_SLOT3_INDEX0::INSTR",
+        "timeout": 10000,
+        "termination": "\n",
+        "log_level": "opc_and_err"
+    },
+    "params": {
+        "start_freq": 10000000.0,
+        "stop_freq": 40000000000.0,
+        "points": 801,
+        "rbw": 1000.0,
+        "power": -5.0
+    },
+    "procedure_dict": {
+        "get_info": [
+            {
+                "cmd": "*IDN?"
+            }
+        ],
+        "reset": [
+            {
+                "cmd": "*RST"
+            },
+            {
+                "cmd": "*CLS"
+            }
+        ],
+        "device_config": [
+            {
+                "cmd": ":FORMat:DATA ASCII,0"
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "SOURCE:POWER:COUPLE OFF"
+            },
+            {
+                "cmd": "SOURCE:POWER1 %d",
+                "args": [
+                    "power"
+                ]
+            }
+        ],
+        "create_meas_reflection": [
+            {
+                "cmd": "CALCULATE:PARAMETER:DELETE:ALL"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:STATE ON"
+            },
+            {
+                "cmd": "CALCULATE:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "args": [
+                    "port"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE1:FEED 'S{0}{0}'",
+                "args": [
+                    "port"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            }
+        ],
+        "create_meas_thru": [
+            {
+                "cmd": "CALCULATE:PARAMETER:DELETE:ALL"
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:STATE ON"
+            },
+            {
+                "cmd": "CALCULATE1:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "args": [
+                    "port_a"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE1:FEED 'S{0}{0}'",
+                "args": [
+                    "port_a"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "CALCULATE2:PARAMETER:DEFINE:EXTENDED 'S{1}{0}', 'S{1}{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE2:FEED 'S{1}{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "SENSE2:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE2:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE2:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE2:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE2:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "CALCULATE3:PARAMETER:DEFINE:EXTENDED 'a{1}/a{0}', 'a{1}/a{0},{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE3:FEED 'a{1}/a{0}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "SENSE3:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE3:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE3:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE3:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE3:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "CALCULATE4:PARAMETER:DEFINE:EXTENDED 'S{0}{0}', 'S{0}{0}'",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE4:FEED 'S{0}{0}'",
+                "args": [
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "SENSE4:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE4:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE4:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE4:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE4:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "CALCULATE5:PARAMETER:DEFINE:EXTENDED 'S{0}{1}', 'S{0}{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE5:FEED 'S{0}{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "SENSE5:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE5:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE5:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE5:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE5:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            },
+            {
+                "cmd": "CALCULATE6:PARAMETER:DEFINE:EXTENDED 'a{0}/a{1}', 'a{0}/a{1},{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "DISPLAY:WINDOW1:TRACE6:FEED 'a{0}/a{1}'",
+                "args": [
+                    "port_a",
+                    "port_b"
+                ]
+            },
+            {
+                "cmd": "SENSE6:FREQUENCY:START %d",
+                "args": [
+                    "start_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE6:FREQUENCY:STOP %d",
+                "args": [
+                    "stop_freq"
+                ]
+            },
+            {
+                "cmd": "SENSE6:SWEEP:TYPE LINEAR"
+            },
+            {
+                "cmd": "SENSE6:SWEEP:POINTS %d",
+                "args": [
+                    "points"
+                ]
+            },
+            {
+                "cmd": "SENSE6:BANDWIDTH %d",
+                "args": [
+                    "rbw"
+                ]
+            }
+        ],
+        "get_refl_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
+            {
+                "cmd": "INITIATE:CONTINUOUS OFF"
+            },
+            {
+                "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "CALCULATE:DATA? SDATA"
+            }
+        ],
+        "get_thru_meas": [
+            {
+                "cmd": "SENSE:FREQ:START?"
+            },
+            {
+                "cmd": "SENSE:FREQ:STOP?"
+            },
+            {
+                "cmd": "SENSE:SWEEP:POINTS?"
+            },
+            {
+                "cmd": "INITIATE:CONTINUOUS OFF"
+            },
+            {
+                "cmd": "INITIATE:IMMEDIATE"
+            },
+            {
+                "cmd": "CALCULATE1:DATA? SDATA"
+            },
+            {
+                "cmd": "CALCULATE2:DATA? SDATA"
+            },
+            {
+                "cmd": "CALCULATE3:DATA? SDATA"
+            },
+            {
+                "cmd": "CALCULATE4:DATA? SDATA"
+            },
+            {
+                "cmd": "CALCULATE5:DATA? SDATA"
+            },
+            {
+                "cmd": "CALCULATE6:DATA? SDATA"
+            }
+        ]
+    }
+}

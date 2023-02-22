@@ -444,27 +444,27 @@ class App:
             self.cal_buttons[(port - 1) * 4 + (cal_type - 1)].config(text="Калибровка\n[✔✔]")
 
     def __config_button_callback__(self):
-        start_freq = float(self.start_freq_sb.get()) * (10 ** (3 * self.start_freq_units.current()))
-        stop_freq = float(self.stop_freq_sb.get()) * (10 ** (3 * self.stop_freq_units.current()))
-        points = int(self.points_sb.get())
-        rbw = float(self.rbw_sb.get()) * (10 ** (3 * self.rbw_units.current()))
-        power = float(self.power_sb.get())
+        self.start_freq = float(self.start_freq_sb.get()) * (10 ** (3 * self.start_freq_units.current()))
+        self.stop_freq = float(self.stop_freq_sb.get()) * (10 ** (3 * self.stop_freq_units.current()))
+        self.points = int(self.points_sb.get())
+        self.rbw = float(self.rbw_sb.get()) * (10 ** (3 * self.rbw_units.current()))
+        self.power = float(self.power_sb.get())
 
-        procedure_config["start_freq"] = start_freq
-        procedure_config["stop_freq"] = stop_freq
-        procedure_config["points"] = points
-        procedure_config["rbw"] = rbw
-        procedure_config["power"] = power
+        procedure_config["start_freq"] = self.start_freq
+        procedure_config["stop_freq"] = self.stop_freq
+        procedure_config["points"] = self.points
+        procedure_config["rbw"] = self.rbw
+        procedure_config["power"] = self.power
 
         self.visa_device.exec_procedure(**procedure_config)
 
         self.__show_config_status__("Успешно", self.STATUS_OK)
 
-        self.model_loader.update_model("params", "start_freq", start_freq)
-        self.model_loader.update_model("params", "stop_freq", stop_freq)
-        self.model_loader.update_model("params", "points", points)
-        self.model_loader.update_model("params", "rbw", rbw)
-        self.model_loader.update_model("params", "power", power)
+        self.model_loader.update_model("params", "start_freq", self.start_freq)
+        self.model_loader.update_model("params", "stop_freq", self.stop_freq)
+        self.model_loader.update_model("params", "points", self.points)
+        self.model_loader.update_model("params", "rbw", self.rbw)
+        self.model_loader.update_model("params", "power", self.power)
 
     def __make_refl_meas__(self, port, cal_type):
         filepath = self.dir_path.get()
@@ -479,6 +479,12 @@ class App:
                 r_file = Reflection(filepath + "/" + (Reflection.LOAD_FILENAME % port))
 
         procedure_cfg_meas_refl["port"] = port
+        procedure_cfg_meas_refl["start_freq"] = self.start_freq
+        procedure_cfg_meas_refl["stop_freq"] = self.stop_freq
+        procedure_cfg_meas_refl["points"] = self.points
+        procedure_cfg_meas_refl["rbw"] = self.rbw
+        procedure_cfg_meas_refl["power"] = self.power
+
         self.visa_device.exec_procedure(**procedure_cfg_meas_refl)
 
         data = self.visa_device.exec_procedure(**procedure_refl_meas)
@@ -492,6 +498,12 @@ class App:
 
         procedure_cfg_meas_thru["port_a"] = 1
         procedure_cfg_meas_thru["port_b"] = port
+        procedure_cfg_meas_thru["start_freq"] = self.start_freq
+        procedure_cfg_meas_thru["stop_freq"] = self.stop_freq
+        procedure_cfg_meas_thru["points"] = self.points
+        procedure_cfg_meas_thru["rbw"] = self.rbw
+        procedure_cfg_meas_thru["power"] = self.power
+
         self.visa_device.exec_procedure(**procedure_cfg_meas_thru)
 
         data = self.visa_device.exec_procedure(**procedure_thru_meas)

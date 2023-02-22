@@ -17,13 +17,21 @@ procedure_config = {
 
 procedure_cfg_meas_refl = {
     "procedure_name": "create_meas_reflection",
-    "port": None
+    "port": None,
+    "start_freq": None,
+    "stop_freq": None,
+    "points": None,
+    "rbw": None,
 }
 
 procedure_cfg_meas_thru = {
     "procedure_name": "create_meas_thru",
     "port_a": None,
-    "port_b": None
+    "port_b": None,
+    "start_freq": None,
+    "stop_freq": None,
+    "points": None,
+    "rbw": None,
 }
 
 procedure_refl_meas = {
