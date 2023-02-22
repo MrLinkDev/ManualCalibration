@@ -33,7 +33,7 @@
         ],
         "device_config": [
             {
-                SYSTEM:PRESET
+                "cmd": ":SYSTEM:PRESET"
             },
             {
                 "cmd": ":FORMat:DATA ASCII,0"
